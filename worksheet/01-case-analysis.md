@@ -9,20 +9,20 @@ nop-cuoi: Có — đây là file nộp cuối của Lab 1
 
 **Case đã chọn:** Manual real-image capture & labeling workflow cho robotics object detection  
 **Người làm:** Nguyễn Tiến Sỉ — 2A202600681  
-**Bàn / nhóm bàn:** Team 013 / repo review  
+**Bàn / nhóm bàn:** Nhóm dự án / project review  
 **Ngày:** 2026-06-18
 
 ## Bước 0 — Chọn case thật nhanh
 
 - [x] Có một **AI shock** hoặc mốc đổi cục diện đủ rõ
-- [x] Có thể tìm được ít nhất **3-5 bằng chứng công khai / repo evidence**
+- [x] Có thể tìm được ít nhất **3-5 bằng chứng công khai / project evidence**
 - [x] Có tác động đủ nhìn thấy được ở user / usage / vị thế cạnh tranh / workflow
 - [x] Có thể trả lời câu hỏi: **"Điều gì đã thay đổi vĩnh viễn?"**
 
 - **Case / sản phẩm / công ty:** Quy trình chụp ảnh thật + gán nhãn thủ công cho dataset robotics object detection, thường dùng CVAT/Label Studio/Roboflow/manual labeling hoặc tự chụp lab dataset.
-- **AI / platform / sản phẩm mới tạo áp lực:** Synthetic data pipeline kết hợp PyBullet simulation, diffusion realism, Grounding DINO QA gate và YOLO benchmark trong repo `C2-App-013`.
+- **AI / platform / sản phẩm mới tạo áp lực:** Synthetic data pipeline kết hợp PyBullet simulation, diffusion realism, Grounding DINO QA gate và YOLO benchmark.
 - **Vì sao tôi chọn case này?**  
-  > Đây là case sát nhất với dự án nhóm. Repo `C2-App-013` không chỉ build app mà còn tự chứng minh một workflow mới: thay vì bắt đầu bằng chụp ảnh thật và gán nhãn thủ công, người dùng có thể sinh dữ liệu từ simulation, làm realism bằng GenAI, kiểm tra giữ nhãn bằng QA gate, rồi đo mAP trên ảnh thật.
+  > Đây là case sát nhất với dự án nhóm. Sản phẩm không chỉ build app mà còn tự chứng minh một workflow mới: thay vì bắt đầu bằng chụp ảnh thật và gán nhãn thủ công, người dùng có thể sinh dữ liệu từ simulation, làm realism bằng GenAI, kiểm tra giữ nhãn bằng QA gate, rồi đo mAP trên ảnh thật.
 
 ---
 
@@ -30,11 +30,11 @@ nop-cuoi: Có — đây là file nộp cuối của Lab 1
 
 | # | Bằng chứng / số liệu chốt | Vì sao số này quan trọng? | Nguồn |
 |---|---|---|---|
-| E1 | YCB-Video/PoseCNN có 133,827 frame; repo dùng bằng chứng này để chỉ ra real-image collection + labeling là data bottleneck. | Cho thấy trước GenAI/synthetic pipeline, robotics perception phụ thuộc nhiều vào bộ dữ liệu thật rất tốn công thu thập và gán nhãn. | `C2-App-013/docs/AI20K-170_prd.md` mục 2.2; Xiang et al. 2018 PoseCNN/YCB-Video |
-| E2 | Repo định nghĩa user need: robotics perception engineer cần tạo dataset object detection có bbox đáng tin để train/evaluate detector trên real-camera imagery mà không lặp lại quy trình chụp–label thủ công. | Xác định đúng JTBD của case: không phải “tạo ảnh đẹp”, mà là tạo dữ liệu huấn luyện đáng tin để model chạy tốt trên camera thật. | `C2-App-013/docs/AI20K-170_prd.md` mục 5 |
-| E3 | Pipeline P1/P2 sinh RGB, 16-bit depth, canny, YOLO labels, metadata từ seed; P1 tạo 5 góc camera × 100 yaw = 500 frames/object. | Đây là điểm phá workflow cũ: dataset được tạo có cấu trúc, lặp lại được, có label sẵn, không cần chụp và label từng ảnh từ đầu. | `C2-App-013/README.md`; `docs/AI20K-170_prd.md` mục 7.1 |
-| E4 | QA gate dùng blur/artifact checks + Grounding DINO IoU; accept nếu IoU ≥ 0.85, flag 0.70–0.84, reject < 0.70 hoặc lỗi count/blur. | AI shock chỉ đáng tin khi có kiểm soát label drift; nếu ảnh đẹp nhưng nhãn sai thì dataset vô dụng. QA gate biến GenAI từ “ảnh đẹp” thành “training data có kiểm chứng”. | `C2-App-013/qa/gate.py`; `README.md` quality thresholds |
-| E5 | Benchmark YOLO26n: `sim` đạt mAP50-95 = 0.823, cao hơn `lab_raw` = 0.775; `realism` = 0.819, gần `sim` nhưng chưa vượt aggregate. Realism tốt nhất ở 4/7 class, nhưng giảm mạnh ở `cracker_box` do texture bị SD1.5 làm hỏng. | Đây là bằng chứng thật về cục diện mới: synthetic/domain-randomized data có thể cạnh tranh với lab-only real data, nhưng GenAI phải được benchmark theo từng class thay vì tin bằng mắt. | `C2-App-013/docs/YOLO26_SimToReal_Benchmark_Report.md` |
+| E1 | YCB-Video/PoseCNN có 133,827 frame; tài liệu dự án dùng bằng chứng này để chỉ ra real-image collection + labeling là data bottleneck. | Cho thấy trước GenAI/synthetic pipeline, robotics perception phụ thuộc nhiều vào bộ dữ liệu thật rất tốn công thu thập và gán nhãn. | PRD nội bộ của dự án; Xiang et al. 2018 PoseCNN/YCB-Video |
+| E2 | Tài liệu dự án định nghĩa user need: robotics perception engineer cần tạo dataset object detection có bbox đáng tin để train/evaluate detector trên real-camera imagery mà không lặp lại quy trình chụp–label thủ công. | Xác định đúng JTBD của case: không phải “tạo ảnh đẹp”, mà là tạo dữ liệu huấn luyện đáng tin để model chạy tốt trên camera thật. | PRD nội bộ của dự án, mục User Need Statement |
+| E3 | Pipeline P1/P2 sinh RGB, 16-bit depth, canny, YOLO labels, metadata từ seed; P1 tạo 5 góc camera × 100 yaw = 500 frames/object. | Đây là điểm phá workflow cũ: dataset được tạo có cấu trúc, lặp lại được, có label sẵn, không cần chụp và label từng ảnh từ đầu. | README và PRD nội bộ của dự án |
+| E4 | QA gate dùng blur/artifact checks + Grounding DINO IoU; accept nếu IoU ≥ 0.85, flag 0.70–0.84, reject < 0.70 hoặc lỗi count/blur. | AI shock chỉ đáng tin khi có kiểm soát label drift; nếu ảnh đẹp nhưng nhãn sai thì dataset vô dụng. QA gate biến GenAI từ “ảnh đẹp” thành “training data có kiểm chứng”. | Module QA gate và README kỹ thuật của dự án |
+| E5 | Benchmark YOLO26n: `sim` đạt mAP50-95 = 0.823, cao hơn `lab_raw` = 0.775; `realism` = 0.819, gần `sim` nhưng chưa vượt aggregate. Realism tốt nhất ở 4/7 class, nhưng giảm mạnh ở `cracker_box` do texture bị SD1.5 làm hỏng. | Đây là bằng chứng thật về cục diện mới: synthetic/domain-randomized data có thể cạnh tranh với lab-only real data, nhưng GenAI phải được benchmark theo từng class thay vì tin bằng mắt. | Benchmark report nội bộ của dự án |
 
 ### 3 phát hiện ban đầu
 
@@ -64,7 +64,7 @@ nop-cuoi: Có — đây là file nộp cuối của Lab 1
 **Competitive dynamic quan trọng nhất:** Build-copy cycles tăng tốc; data advantage dịch từ “ai có nhiều ảnh thật hơn” sang “ai có pipeline tạo, lọc, đo và cải thiện data nhanh hơn”.
 
 **Trả lời của tôi:**  
-> User không chỉ muốn một tool label ảnh, họ muốn một pipeline tạo dataset có thể train được, có QA, có benchmark và có metadata tái lập. Luật chơi cạnh tranh chuyển từ “ai label nhiều ảnh thật hơn” sang “ai tạo được nhiều biến thể dữ liệu đủ tin cậy hơn với chi phí thấp hơn và chứng minh bằng metric trên ảnh thật”. Trong repo `C2-App-013`, sản phẩm không bán ảnh synthetic; sản phẩm bán một bằng chứng: synthetic/domain-randomized dataset có thể giúp detector đạt mAP tốt hơn lab-only real dataset trong benchmark.
+> User không chỉ muốn một tool label ảnh, họ muốn một pipeline tạo dataset có thể train được, có QA, có benchmark và có metadata tái lập. Luật chơi cạnh tranh chuyển từ “ai label nhiều ảnh thật hơn” sang “ai tạo được nhiều biến thể dữ liệu đủ tin cậy hơn với chi phí thấp hơn và chứng minh bằng metric trên ảnh thật”. Sản phẩm không bán ảnh synthetic; sản phẩm bán một bằng chứng: synthetic/domain-randomized dataset có thể giúp detector đạt mAP tốt hơn lab-only real dataset trong benchmark.
 
 **Bằng chứng đỡ nhận định này:** E3, E4, E5
 
@@ -100,7 +100,7 @@ nop-cuoi: Có — đây là file nộp cuối của Lab 1
 
 ## Bước 3 — Share trong bàn
 
-> Ghi chú: chưa có transcript thảo luận lớp trong repo. Phần dưới là ghi chú phản biện dựa trên review dự án `C2-App-013`; nếu có share trực tiếp trên lớp, nên thay bằng ghi chú người thật.
+> Ghi chú: chưa có transcript thảo luận lớp. Phần dưới là ghi chú phản biện dựa trên project review; nếu có share trực tiếp trên lớp, nên thay bằng ghi chú người thật.
 
 ### Ghi nhanh khi nghe các bạn cùng bàn / góc phản biện
 
@@ -114,7 +114,7 @@ nop-cuoi: Có — đây là file nộp cuối của Lab 1
 ### Sau khi cả bàn share xong, chốt 3 ý chung
 
 **1. Bàn tôi thấy case nào có bằng chứng mạnh nhất? Vì sao?**  
-> Case manual labeling / lab-only dataset có bằng chứng mạnh nhất vì repo đã có số liệu benchmark cụ thể: `sim` vượt `lab_raw`, còn `realism` không thắng aggregate. Đây không phải suy đoán thị trường mà là evidence từ chính pipeline.
+> Case manual labeling / lab-only dataset có bằng chứng mạnh nhất vì dự án đã có số liệu benchmark cụ thể: `sim` vượt `lab_raw`, còn `realism` không thắng aggregate. Đây không phải suy đoán thị trường mà là evidence từ chính pipeline.
 
 **2. Có pattern nào lặp lại giữa nhiều case không?**  
 > Pattern lặp lại là AI không chỉ thay feature, mà thay chuẩn kỳ vọng: user muốn workflow tự tạo output, có kiểm chứng, có metric và có khả năng lặp lại. Moat cũ dựa trên manual effort giảm giá trị nếu AI có thể tự động hóa phần tạo và kiểm thử.
@@ -145,7 +145,7 @@ nop-cuoi: Có — đây là file nộp cuối của Lab 1
 > Dataset robotics perception sẽ được đánh giá bằng validation evidence trên real holdout và failure analysis theo class, không chỉ bằng nguồn gốc “ảnh thật” hay cảm giác ảnh realistic.
 
 **Nếu phải rút 1 bài học cho dự án của nhóm mình, tôi rút ra:**  
-> Dự án AI Product phải claim bằng metric chứ không bằng demo đẹp. Với `C2-App-013`, claim an toàn nhất là: pipeline giúp tạo, kiểm soát và benchmark dataset nhanh hơn; diffusion realism là một biến thể cần tiếp tục kiểm chứng, không phải chiến thắng đã chắc chắn.
+> Dự án AI Product phải claim bằng metric chứ không bằng demo đẹp. Với dự án nhóm, claim an toàn nhất là: pipeline giúp tạo, kiểm soát và benchmark dataset nhanh hơn; diffusion realism là một biến thể cần tiếp tục kiểm chứng, không phải chiến thắng đã chắc chắn.
 
 ---
 
